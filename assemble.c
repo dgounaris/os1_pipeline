@@ -10,11 +10,14 @@ void assemble(int semId) {
     struct sembuf semUp = {0, 1, 0};
     int i=0;
     for (i=0;i<2;i++) {
-        //printf("-------- %d\n",semctl(semId, 17, GETVAL, NULL));
         semDown.sem_num = 17;
         semop(semId, &semDown, 1); //wait for process signal
+        //todo uncomment when all 3 implemented
+        //semDown.sem_num = 18;
+        //semop(semId, &semDown, 1); //wait for process signal
+        //semDown.sem_num = 19;
+        //semop(semId, &semDown, 1); //wait for process signal
         printf("Assembling!\n");
-        //todo possibly create process signals for all 3 components
         //todo process the assembly of the parts
         //todo this semUp for all availabilities (14 to 16)
         semUp.sem_num = 14;

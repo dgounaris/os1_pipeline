@@ -16,7 +16,7 @@ void initSems(int semId);
 
 int main() {
     //semaphore create
-    int numOfSemaphores = 19;
+    int numOfSemaphores = 21;
     int semId = semget((key_t) 111, numOfSemaphores, IPC_CREAT | 0660);
     struct sembuf semDown = {0, -1, 0};
     struct sembuf semUp = {0, 1, 0};
@@ -112,7 +112,9 @@ void initSems(int semId) {
     //fourth state process status
     arg.val = 0;
     semctl(semId, 17, SETVAL, arg);
+    semctl(semId, 18, SETVAL, arg);
+    semctl(semId, 19, SETVAL, arg);
     //still pending items semaphore
     arg.val = 1;
-    semctl(semId, 18, SETVAL, arg);
+    semctl(semId, 20, SETVAL, arg);
 }
