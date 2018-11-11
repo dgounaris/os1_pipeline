@@ -6,6 +6,7 @@
 #include <sys/sem.h>
 #include <sys/shm.h>
 #include <sys/wait.h>
+#include <time.h>
 #include "semconfig.h"
 #include "construction.h"
 #include "paint.h"
@@ -14,7 +15,12 @@
 
 void initSems(int semId);
 
-int main() {
+int main(int argc, char *argv[]) {
+    int elements = 1000;
+    if (argc == 2) {
+        elements = atoi(argv[1]);
+    }
+    srand(time(NULL));
     //semaphore create
     int numOfSemaphores = 21;
     int semId = semget((key_t) 111, numOfSemaphores, IPC_CREAT | 0660);
@@ -23,45 +29,58 @@ int main() {
     int i = 0;
     initSems(semId);
 
+    //create shared memory segments
+    // *2 + 1 because we keep type + id + buffer next free location at the end
+    int constructionFirstBuffer = shmget((key_t) 101, sizeof(struct cItem), IPC_CREAT | 0666);
+    struct cItem* cofp = shmat(constructionFirstBuffer, NULL, 0);
+    int constructionSecondBuffer = shmget((key_t) 102, sizeof(struct cItem), IPC_CREAT | 0666);
+    struct cItem* cosp = shmat(constructionSecondBuffer, NULL, 0);
+    int constructionThirdBuffer = shmget((key_t) 103, sizeof(struct cItem), IPC_CREAT | 0666);
+    struct cItem* cotp = shmat(constructionThirdBuffer, NULL, 0);
+    int paintBuffer = shmget((key_t) 201, sizeof(struct cItem), IPC_CREAT | 0666);
+    struct cItem* pp = shmat(paintBuffer, NULL, 0);
+    int checkFirstBuffer = shmget((key_t) 301, sizeof(struct cItem), IPC_CREAT | 0666);
+    struct cItem* chfp = shmat(checkFirstBuffer, NULL, 0);
+    int checkSecondBuffer = shmget((key_t) 302, sizeof(struct cItem), IPC_CREAT | 0666);
+    struct cItem* chsp = shmat(checkSecondBuffer, NULL, 0);
+    int checkThirdBuffer = shmget((key_t) 303, sizeof(struct cItem), IPC_CREAT | 0666);
+    struct cItem* chtp = shmat(constructionThirdBuffer, NULL, 0);
+    int assembleBuffer = shmget((key_t) 401, 3 * sizeof(struct cItem), IPC_CREAT | 0666);
+    struct cItem* ap = shmat(assembleBuffer, NULL, 0);
+
+
     if (fork() == 0) { //first state child
-        constructFirst(semId);
+        constructFirst(semId, cofp, pp, elements);
         return 0;
     }
     if (fork() == 0) { //first state child
-        constructSecond(semId);
+        constructSecond(semId, cosp, pp, elements);
         return 0;
     }
     if (fork() == 0) { //first state child
-        constructThird(semId);
+        constructThird(semId, cotp, pp, elements);
         return 0;
     }
     if (fork() == 0) { //second state child
-        paint(semId);
+        paint(semId, pp, chfp, chsp, chtp, elements);
         return 0;
     }
     if (fork() == 0) { //third state child
-        checkFirst(semId);
+        checkFirst(semId, chfp, ap, elements);
         return 0;
     }
     if (fork() == 0) { //third state child
-        checkSecond(semId);
+        checkSecond(semId, chsp, ap, elements);
         return 0;
     }
     if (fork() == 0) { //third state child
-        checkThird(semId);
+        checkThird(semId, chtp, ap, elements);
         return 0;
     }
     if (fork() == 0) { //forth state child
-        assemble(semId);
+        assemble(semId, ap, elements);
         return 0;
     }
-
-    semop(semId, &semDown, 1); //down first availability
-    semUp.sem_num = 3;
-    semop(semId, &semUp, 1); //up first process
-    semop(semId, &semDown, 1); //down first availability
-    semUp.sem_num = 3;
-    semop(semId, &semUp, 1); //up first process
 
     int status;
     while (wait(&status) > 0); //wait for all children to finish
@@ -69,6 +88,21 @@ int main() {
     for (i = 0; i < numOfSemaphores; i++) {
         semctl(semId, i, IPC_RMID, 0);
     }
+
+    shmdt(cofp); shmdt(cosp); shmdt(cotp);
+    shmdt(pp);
+    shmdt(chfp); shmdt(chsp); shmdt(chtp);
+    shmdt(ap);
+
+    shmctl(constructionFirstBuffer, 0, IPC_RMID);
+    shmctl(constructionSecondBuffer, 0, IPC_RMID);
+    shmctl(constructionThirdBuffer, 0, IPC_RMID);
+    shmctl(paintBuffer, 0, IPC_RMID);
+    shmctl(checkFirstBuffer, 0, IPC_RMID);
+    shmctl(checkSecondBuffer, 0, IPC_RMID);
+    shmctl(checkThirdBuffer, 0, IPC_RMID);
+    shmctl(assembleBuffer, 0, IPC_RMID);
+
     return 0;
 }
 

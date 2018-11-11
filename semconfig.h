@@ -16,4 +16,10 @@ union semun {
     unsigned short *array;
 };
 
+struct cItem {
+    int id;
+    int type;
+    long long tCreate;
+};
+
 #endif //ASKISI1_HATZ_CONFIG_H
