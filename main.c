@@ -47,7 +47,12 @@ int main(int argc, char *argv[]) {
     struct cItem* chtp = shmat(constructionThirdBuffer, NULL, 0);
     int assembleBuffer = shmget((key_t) 401, 3 * sizeof(struct cItem), IPC_CREAT | 0666);
     struct cItem* ap = shmat(assembleBuffer, NULL, 0);
-
+    int paintBlockedTotalTime = shmget((key_t) 501, sizeof(double), IPC_CREAT | 0666);
+    double* pbt = shmat(paintBlockedTotalTime, NULL, 0);
+    int constructionTotalTime = shmget((key_t) 502, sizeof(double), IPC_CREAT | 0666);
+    double* ct = shmat(constructionTotalTime, NULL, 0);
+    *pbt = 0;
+    *ct = 0;
 
     if (fork() == 0) { //first state child
         constructFirst(semId, cofp, pp, elements);
@@ -78,13 +83,17 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     if (fork() == 0) { //forth state child
-        assemble(semId, ap, elements);
+        assemble(semId, ap, elements, ct, pbt);
         return 0;
     }
 
     int status;
     while (wait(&status) > 0); //wait for all children to finish
     wait(&status);
+
+    printf("Average component blocked time before painting: %lf\n", (*pbt)/(elements*3));
+    printf("Average component creation time: %lf\n", (*ct)/elements);
+
     for (i = 0; i < numOfSemaphores; i++) {
         semctl(semId, i, IPC_RMID, 0);
     }
@@ -93,6 +102,7 @@ int main(int argc, char *argv[]) {
     shmdt(pp);
     shmdt(chfp); shmdt(chsp); shmdt(chtp);
     shmdt(ap);
+    shmdt(pbt); shmdt(ct);
 
     shmctl(constructionFirstBuffer, 0, IPC_RMID);
     shmctl(constructionSecondBuffer, 0, IPC_RMID);
@@ -102,6 +112,8 @@ int main(int argc, char *argv[]) {
     shmctl(checkSecondBuffer, 0, IPC_RMID);
     shmctl(checkThirdBuffer, 0, IPC_RMID);
     shmctl(assembleBuffer, 0, IPC_RMID);
+    shmctl(paintBlockedTotalTime, 0, IPC_RMID);
+    shmctl(constructionTotalTime, 0, IPC_RMID);
 
     return 0;
 }

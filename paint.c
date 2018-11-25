@@ -41,7 +41,9 @@ void paint(int semId, struct cItem *myBufferPos, struct cItem *nextFirstBufferPo
             semop(semId, &semDown, 1); //down third availability
             nextFirstBufferPos->id = myBufferPos->id;
             nextFirstBufferPos->type = myBufferPos->type;
-            nextFirstBufferPos->tCreate = myBufferPos->tCreate;
+            nextFirstBufferPos->sec = myBufferPos->sec;
+            nextFirstBufferPos->msec = myBufferPos->msec;
+            nextFirstBufferPos->paintBlockedTime = myBufferPos->paintBlockedTime;
             semUp.sem_num = 11;
             semop(semId, &semUp, 1); //up third process
         } else if (type == 2) {
@@ -49,7 +51,9 @@ void paint(int semId, struct cItem *myBufferPos, struct cItem *nextFirstBufferPo
             semop(semId, &semDown, 1); //down third availability
             nextSecondBufferPos->id = myBufferPos->id;
             nextSecondBufferPos->type = myBufferPos->type;
-            nextSecondBufferPos->tCreate = myBufferPos->tCreate;
+            nextSecondBufferPos->sec = myBufferPos->sec;
+            nextSecondBufferPos->msec = myBufferPos->msec;
+            nextSecondBufferPos->paintBlockedTime = myBufferPos->paintBlockedTime;
             semUp.sem_num = 12;
             semop(semId, &semUp, 1); //up third process
         } else if (type == 3) {
@@ -57,7 +61,9 @@ void paint(int semId, struct cItem *myBufferPos, struct cItem *nextFirstBufferPo
             semop(semId, &semDown, 1); //down third availability
             nextThirdBufferPos->id = myBufferPos->id;
             nextThirdBufferPos->type = myBufferPos->type;
-            nextThirdBufferPos->tCreate = myBufferPos->tCreate;
+            nextThirdBufferPos->sec = myBufferPos->sec;
+            nextThirdBufferPos->msec = myBufferPos->msec;
+            nextThirdBufferPos->paintBlockedTime = myBufferPos->paintBlockedTime;
             semUp.sem_num = 13;
             semop(semId, &semUp, 1); //up third process
         }

@@ -27,8 +27,8 @@ void constructFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBuff
         myBufferPos->type = 1;
         struct timeval te;
         gettimeofday(&te, NULL); // get current time
-        long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
-        myBufferPos->tCreate = milliseconds;
+        myBufferPos->sec = te.tv_sec;
+        myBufferPos->msec = te.tv_usec;
         semUp.sem_num = 3;
         semop(semId, &semUp, 1); //up first process
         semDown.sem_num = 3;
@@ -42,7 +42,11 @@ void constructFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBuff
         printf("Constructing component 1\n");
         nextBufferPos->id = myBufferPos->id;
         nextBufferPos->type = myBufferPos->type;
-        nextBufferPos->tCreate = myBufferPos->tCreate;
+        nextBufferPos->sec = myBufferPos->sec;
+        nextBufferPos->msec = myBufferPos->msec;
+        gettimeofday(&te, NULL); // get current time
+        double blockedTime = (te.tv_sec-myBufferPos->sec)+(te.tv_usec-myBufferPos->msec)/1000000.0;
+        nextBufferPos->paintBlockedTime = blockedTime;
         semUp.sem_num = 7; //up second process
         semop(semId, &semUp, 1);
         semUp.sem_num = 0;
@@ -67,8 +71,8 @@ void constructSecond(int semId, struct cItem *myBufferPos, struct cItem *nextBuf
         myBufferPos->type = 2;
         struct timeval te;
         gettimeofday(&te, NULL); // get current time
-        long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
-        myBufferPos->tCreate = milliseconds;
+        myBufferPos->sec = te.tv_sec;
+        myBufferPos->msec = te.tv_usec;
         semUp.sem_num = 4;
         semop(semId, &semUp, 1); //up first process
         semDown.sem_num = 4;
@@ -82,7 +86,11 @@ void constructSecond(int semId, struct cItem *myBufferPos, struct cItem *nextBuf
         printf("Constructing component 2\n");
         nextBufferPos->id = myBufferPos->id;
         nextBufferPos->type = myBufferPos->type;
-        nextBufferPos->tCreate = myBufferPos->tCreate;
+        nextBufferPos->sec = myBufferPos->sec;
+        nextBufferPos->msec = myBufferPos->msec;
+        gettimeofday(&te, NULL); // get current time
+        double blockedTime = (te.tv_sec-myBufferPos->sec)+(te.tv_usec-myBufferPos->msec)/1000000.0;
+        nextBufferPos->paintBlockedTime = blockedTime;
         semUp.sem_num = 7; //up second process
         semop(semId, &semUp, 1);
         semUp.sem_num = 1;
@@ -107,8 +115,8 @@ void constructThird(int semId, struct cItem *myBufferPos, struct cItem *nextBuff
         myBufferPos->type = 3;
         struct timeval te;
         gettimeofday(&te, NULL); // get current time
-        long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
-        myBufferPos->tCreate = milliseconds;
+        myBufferPos->sec = te.tv_sec;
+        myBufferPos->msec = te.tv_usec;
         semUp.sem_num = 5;
         semop(semId, &semUp, 1); //up first process
         semDown.sem_num = 5;
@@ -122,7 +130,11 @@ void constructThird(int semId, struct cItem *myBufferPos, struct cItem *nextBuff
         printf("Constructing component 3\n");
         nextBufferPos->id = myBufferPos->id;
         nextBufferPos->type = myBufferPos->type;
-        nextBufferPos->tCreate = myBufferPos->tCreate;
+        nextBufferPos->sec = myBufferPos->sec;
+        nextBufferPos->msec = myBufferPos->msec;
+        gettimeofday(&te, NULL); // get current time
+        double blockedTime = (te.tv_sec-myBufferPos->sec)+(te.tv_usec-myBufferPos->msec)/1000000.0;
+        nextBufferPos->paintBlockedTime = blockedTime;
         semUp.sem_num = 7; //up second process
         semop(semId, &semUp, 1);
         semUp.sem_num = 2;

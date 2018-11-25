@@ -10,9 +10,6 @@ void checkFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPo
     printf("Hello from checking component 1\n");
     struct sembuf semDown = {11, -1, 0};
     struct sembuf semUp = {11, 1, 0};
-    int pickPos = 0;
-    int putPos = 0;
-    int id, type;
     int i=0;
     for (i=0;i<elements;i++) {
         semDown.sem_num = 11;
@@ -24,9 +21,11 @@ void checkFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPo
         ts.tv_sec = 60 / 1000;
         ts.tv_nsec = (60 % 1000) * 1000000;
         nanosleep(&ts, NULL);
-        nextBufferPos->id = myBufferPos->id;
-        nextBufferPos->type = myBufferPos->type;
-        nextBufferPos->tCreate = myBufferPos->tCreate;
+        nextBufferPos[0].id = myBufferPos->id;
+        nextBufferPos[0].type = myBufferPos->type;
+        nextBufferPos[0].sec = myBufferPos->sec;
+        nextBufferPos[0].msec = myBufferPos->msec;
+        nextBufferPos[0].paintBlockedTime = myBufferPos->paintBlockedTime;
         semUp.sem_num = 17; //up fourth process
         semop(semId, &semUp, 1);
         semUp.sem_num = 8;
@@ -38,9 +37,6 @@ void checkSecond(int semId, struct cItem *myBufferPos, struct cItem *nextBufferP
     printf("Hello from checking component 2\n");
     struct sembuf semDown = {11, -1, 0};
     struct sembuf semUp = {11, 1, 0};
-    int pickPos = 0;
-    int putPos = 0;
-    int id, type;
     int i=0;
     for (i=0;i<elements;i++) {
         semDown.sem_num = 12;
@@ -52,9 +48,11 @@ void checkSecond(int semId, struct cItem *myBufferPos, struct cItem *nextBufferP
         ts.tv_sec = 60 / 1000;
         ts.tv_nsec = (60 % 1000) * 1000000;
         nanosleep(&ts, NULL);
-        nextBufferPos->id = myBufferPos->id;
-        nextBufferPos->type = myBufferPos->type;
-        nextBufferPos->tCreate = myBufferPos->tCreate;
+        nextBufferPos[1].id = myBufferPos->id;
+        nextBufferPos[1].type = myBufferPos->type;
+        nextBufferPos[1].sec = myBufferPos->sec;
+        nextBufferPos[1].msec = myBufferPos->msec;
+        nextBufferPos[1].paintBlockedTime = myBufferPos->paintBlockedTime;
         semUp.sem_num = 18; //up fourth process
         semop(semId, &semUp, 1);
         semUp.sem_num = 9;
@@ -66,9 +64,6 @@ void checkThird(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPo
     printf("Hello from checking component 3\n");
     struct sembuf semDown = {11, -1, 0};
     struct sembuf semUp = {11, 1, 0};
-    int pickPos = 0;
-    int putPos = 0;
-    int id, type;
     int i=0;
     for (i=0;i<elements;i++) {
         semDown.sem_num = 13;
@@ -80,9 +75,11 @@ void checkThird(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPo
         ts.tv_sec = 60 / 1000;
         ts.tv_nsec = (60 % 1000) * 1000000;
         nanosleep(&ts, NULL);
-        nextBufferPos->id = myBufferPos->id;
-        nextBufferPos->type = myBufferPos->type;
-        nextBufferPos->tCreate = myBufferPos->tCreate;
+        nextBufferPos[2].id = myBufferPos->id;
+        nextBufferPos[2].type = myBufferPos->type;
+        nextBufferPos[2].sec = myBufferPos->sec;
+        nextBufferPos[2].msec = myBufferPos->msec;
+        nextBufferPos[2].paintBlockedTime = myBufferPos->paintBlockedTime;
         semUp.sem_num = 19; //up fourth process
         semop(semId, &semUp, 1);
         semUp.sem_num = 10;
