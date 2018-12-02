@@ -7,7 +7,7 @@
 #include <time.h>
 
 void checkFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPos, int elements) {
-    printf("Hello from checking component 1\n");
+    //printf("Hello from checking component 1\n");
     struct sembuf semDown = {11, -1, 0};
     struct sembuf semUp = {11, 1, 0};
     int i=0;
@@ -16,7 +16,7 @@ void checkFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPo
         semop(semId, &semDown, 1); //wait for process signal and start processing
         semDown.sem_num = 14;
         semop(semId, &semDown, 1); //down fourth availability
-        printf("Checking component 1\n");
+        //printf("Checking component 1\n");
         struct timespec ts;
         ts.tv_sec = 60 / 1000;
         ts.tv_nsec = (60 % 1000) * 1000000;
@@ -34,7 +34,7 @@ void checkFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPo
 }
 
 void checkSecond(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPos, int elements) {
-    printf("Hello from checking component 2\n");
+    //printf("Hello from checking component 2\n");
     struct sembuf semDown = {11, -1, 0};
     struct sembuf semUp = {11, 1, 0};
     int i=0;
@@ -43,7 +43,7 @@ void checkSecond(int semId, struct cItem *myBufferPos, struct cItem *nextBufferP
         semop(semId, &semDown, 1); //wait for process signal and start processing
         semDown.sem_num = 15;
         semop(semId, &semDown, 1); //down fourth availability
-        printf("Checking component 2\n");
+        //printf("Checking component 2\n");
         struct timespec ts;
         ts.tv_sec = 60 / 1000;
         ts.tv_nsec = (60 % 1000) * 1000000;
@@ -61,7 +61,7 @@ void checkSecond(int semId, struct cItem *myBufferPos, struct cItem *nextBufferP
 }
 
 void checkThird(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPos, int elements) {
-    printf("Hello from checking component 3\n");
+    //printf("Hello from checking component 3\n");
     struct sembuf semDown = {11, -1, 0};
     struct sembuf semUp = {11, 1, 0};
     int i=0;
@@ -70,7 +70,7 @@ void checkThird(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPo
         semop(semId, &semDown, 1); //wait for process signal and start processing
         semDown.sem_num = 16;
         semop(semId, &semDown, 1); //down fourth availability
-        printf("Checking component 3\n");
+        //printf("Checking component 3\n");
         struct timespec ts;
         ts.tv_sec = 60 / 1000;
         ts.tv_nsec = (60 % 1000) * 1000000;

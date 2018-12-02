@@ -10,10 +10,9 @@
 #include <math.h>
 
 void constructFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPos, int elements) {
-    printf("Hello from construction component 1\n");
+    //printf("Hello from construction component 1\n");
     struct sembuf semDown = {3, -1, 0};
     struct sembuf semUp = {3, 1, 0};
-    printf("Construction 1 pos: %p Next: %p\n", myBufferPos, nextBufferPos);
     int i=0;
     for (i=0;i<elements;i++) {
         int msPause = rand() % 50;
@@ -39,7 +38,7 @@ void constructFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBuff
         semop(semId, &semUp, 1); //down assemble availability and then up, just a check to give paint priority
         semDown.sem_num = 6;
         semop(semId, &semDown, 1); //down second availability
-        printf("Constructing component 1\n");
+        //printf("Constructing component 1\n");
         nextBufferPos->id = myBufferPos->id;
         nextBufferPos->type = myBufferPos->type;
         nextBufferPos->sec = myBufferPos->sec;
@@ -55,7 +54,7 @@ void constructFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBuff
 }
 
 void constructSecond(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPos, int elements) {
-    printf("Hello from construction component 2\n");
+    //printf("Hello from construction component 2\n");
     struct sembuf semDown = {3, -1, 0};
     struct sembuf semUp = {3, 1, 0};
     int i=0;
@@ -83,7 +82,7 @@ void constructSecond(int semId, struct cItem *myBufferPos, struct cItem *nextBuf
         semop(semId, &semUp, 1); //down assemble availability and then up, just a check to give paint priority
         semDown.sem_num = 6;
         semop(semId, &semDown, 1); //down second availability
-        printf("Constructing component 2\n");
+        //printf("Constructing component 2\n");
         nextBufferPos->id = myBufferPos->id;
         nextBufferPos->type = myBufferPos->type;
         nextBufferPos->sec = myBufferPos->sec;
@@ -99,7 +98,7 @@ void constructSecond(int semId, struct cItem *myBufferPos, struct cItem *nextBuf
 }
 
 void constructThird(int semId, struct cItem *myBufferPos, struct cItem *nextBufferPos, int elements) {
-    printf("Hello from construction component 3\n");
+    //printf("Hello from construction component 3\n");
     struct sembuf semDown = {3, -1, 0};
     struct sembuf semUp = {3, 1, 0};
     int i=0;
@@ -127,7 +126,7 @@ void constructThird(int semId, struct cItem *myBufferPos, struct cItem *nextBuff
         semop(semId, &semUp, 1); //down assemble availability and then up, just a check to give paint priority
         semDown.sem_num = 6;
         semop(semId, &semDown, 1); //down second availability
-        printf("Constructing component 3\n");
+        //printf("Constructing component 3\n");
         nextBufferPos->id = myBufferPos->id;
         nextBufferPos->type = myBufferPos->type;
         nextBufferPos->sec = myBufferPos->sec;

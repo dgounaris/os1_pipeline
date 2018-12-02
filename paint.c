@@ -8,17 +8,16 @@
 
 void paint(int semId, struct cItem *myBufferPos, struct cItem *nextFirstBufferPos, struct cItem *nextSecondBufferPos,
            struct cItem *nextThirdBufferPos, int elements) {
-    printf("Hello from painting component\n");
+    //printf("Hello from painting component\n");
     struct sembuf semDown = {7, -1, 0};
     struct sembuf semUp = {7, 1, 0};
-    int id, type;
-    printf("Paint pos: %p Next: %p\n", myBufferPos, nextFirstBufferPos);
+    int type;
     int i=0;
     for (i=0;i<elements*3;i++) {
         semDown.sem_num = 7;
         semop(semId, &semDown, 1); //down second process
         type = myBufferPos->type;
-        printf("Painting component\n");
+        //printf("Painting component\n");
         if (type == 1) {
             struct timespec ts;
             ts.tv_sec = 15 / 1000;
@@ -35,7 +34,6 @@ void paint(int semId, struct cItem *myBufferPos, struct cItem *nextFirstBufferPo
             ts.tv_nsec = (30 % 1000) * 1000000;
             nanosleep(&ts, NULL);
         }
-        printf("ptype %d\n", type);
         if (type == 1) {
             semDown.sem_num = 8;
             semop(semId, &semDown, 1); //down third availability
