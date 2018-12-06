@@ -13,6 +13,7 @@ void constructFirst(int semId, struct cItem *myBufferPos, struct cItem *nextBuff
     //printf("Hello from construction component 1\n");
     struct sembuf semDown = {3, -1, 0};
     struct sembuf semUp = {3, 1, 0};
+    printf("Construction 1 pos: %p Next: %p\n", myBufferPos, nextBufferPos);
     int i=0;
     for (i=0;i<elements;i++) {
         int msPause = rand() % 50;
